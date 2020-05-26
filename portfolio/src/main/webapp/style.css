@@ -8,6 +8,19 @@
   margin-top: 20px;
 }
 
+img.first_picture {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+div {
+    border: 2px solid black;
+    background-color: white;
+    padding: 10px;
+}
 .image-thumbnails {
   display: flex;
   flex-wrap: wrap;
@@ -19,4 +32,3 @@
   max-height: 200px;
   max-width: 200px;
 }
-
