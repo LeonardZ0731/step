@@ -29,6 +29,11 @@ div {
     padding: 10px;
 }
 
+#header {
+    text-align: center;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
 .image-thumbnails {
   display: flex;
   flex-wrap: wrap;
