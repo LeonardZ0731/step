@@ -17,7 +17,7 @@ body {
 }
 
 #nav-bar {
-    margin-left: 10%;
+    margin-left: 2%;
     width: 10%;
     background-color: lightskyblue;
     position: fixed;
@@ -92,4 +92,10 @@ div {
   margin: 10px;
   max-height: 200px;
   max-width: 200px;
+}
+
+@media (max-width: 1300px) {
+    #nav-bar {
+        display: none;
+    }
 }
