@@ -16,7 +16,7 @@ body {
     background-attachment: fixed;
 }
 
-ul {
+#nav-bar {
     margin-left: 10%;
     width: 10%;
     background-color: lightskyblue;
@@ -27,7 +27,7 @@ ul {
     opacity: 0.7;
 }
 
-li a {
+#nav-bar a {
     display: block;
     color:lightyellow;
     padding-inline-start: 10px;
@@ -45,17 +45,6 @@ li a {
     border-radius: 8px;
     margin-left: auto;
     margin-right: auto;
-}
-
-.img-description {
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.2s, visibility 0.2s;
-}
-
-#content:hover .img-description {
-    visibility: visible;
-    opacity: 1;
 }
 
 button {
@@ -82,9 +71,15 @@ div {
     color:rgb(0, 38, 255);
 }
 
-#content h2 {
+#content h3 {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 20px;
+}
+
+.self-introduction {
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
 }
 
 .image-thumbnails {
