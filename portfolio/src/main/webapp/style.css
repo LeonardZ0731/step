@@ -47,6 +47,17 @@ li a {
     margin-right: auto;
 }
 
+.img-description {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s, visibility 0.2s;
+}
+
+#content:hover .img-description {
+    visibility: visible;
+    opacity: 1;
+}
+
 button {
     cursor: pointer;
     margin-bottom: 10px;
