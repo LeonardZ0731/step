@@ -8,6 +8,12 @@
   margin-top: 20px;
 }
 
+body {
+    background-image: url("/images/background.jpg");
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+
 #first-picture {
     max-width: 100%;
     height: auto;
@@ -32,6 +38,12 @@ div {
 #header {
     text-align: center;
     font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+#intro-paragraph {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 24px;
+    color:rgb(0, 38, 255);
 }
 
 .image-thumbnails {
