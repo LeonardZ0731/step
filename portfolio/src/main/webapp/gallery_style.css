@@ -1,0 +1,42 @@
+div {
+    margin-top: 10px;
+    background-color: rgba(135, 207, 235, 0.644);
+    padding: 10px;
+}
+
+#content {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1000px;
+  width: auto;
+  background-color: rgba(190, 227, 241, 0.836)
+}
+
+body {
+    background-image: url("/images/background.jpg");
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-attachment: fixed;
+}
+
+.image-thumbnails {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.image-thumbnails img {
+  margin: 10px;
+  max-height: 700px;
+  height: auto;
+  max-width: 700px;
+  width: auto;
+}
+
+#return-link {
+    margin: 10px 10px;
+    background-color: rgba(255, 255, 255, 0.856);
+    padding: 10px;
+    max-width: 90%;
+    position: fixed;
+}
