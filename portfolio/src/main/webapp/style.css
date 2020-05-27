@@ -1,7 +1,8 @@
 #content {
   margin-left: auto;
   margin-right: auto;
-  width: 650px;
+  max-width: 1000px;
+  width: auto;
 }
 
 #greeting-container {
@@ -44,6 +45,11 @@ div {
     font-family: 'Times New Roman', Times, serif;
     font-size: 24px;
     color:rgb(0, 38, 255);
+}
+
+#content h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
 }
 
 .image-thumbnails {
