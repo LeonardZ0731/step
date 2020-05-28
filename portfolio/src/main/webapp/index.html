@@ -7,20 +7,53 @@
     <script src="script.js"></script>
   </head>
   <body>
+    <ul id="nav-bar">
+        <li><a href="#intro-paragraph">Intro</a></li>
+        <li><a href="#fact">Fact About Me</a></li>
+        <li><a href="#projects">My Projects</a></li>
+        <li><a href="#gallery">My Photo Gallery</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
     <div id="content">
-      <h1>Leonard Zhang's Portfolio</h1>
-      <p>This is my portfolio. I just start modifying it and have not completed it yet. </p>
-      <p>This is a photo of mine.</p>
-      <img id="first-picture" src="/images/Leonard-3.jpg"/>
-      <p id="self-intro">Hello everyone, I'm Leonard Zhang. You can call me Leonard. I’m a rising junior at Carnegie Mellon University, 
+      <h1 id="header">Leonard Zhang's Portfolio</h1>
+      <h2 id="intro-paragraph">Welcome to my portfolio page. Let' start a brief tour about me!</h2>
+      <p class="self-introduction">Hi, I'm Leonard Zhang. You can call me Leonard. I’m a rising junior at Carnegie Mellon University, 
         pursuing a bachelor degree in Computer Science and Applied Math. In my spare time, I love playing basketball and 
-        video games with my friends. Also, I really enjoy hiking with my family members during the vacations. Because of 
-        my interest in games, I love developing some small games with my friends during my spare time. It’s such a great 
-        fun playing the games developed by my own. Thus, developing games is one of my biggest passions. </p>
-      <p>Click here to get a random message:</p>
-      <button onclick="addRandomFact()">Fact about myself</button>
+        video games with my friends. </p> 
+      <img id="basketball" src="/images/basketball.jpg" alt="My friends and I playing basketball"/>
+      <p class="self-introduction"> Also, I really enjoy hiking and travelling with my family members during the vacations. My favorite destination
+          is Japan and I have visited there twice in the past three years.</p>
+      <figure>
+        <img id="my-picture" src="/images/Leonard-3.jpg"/>
+        <figcaption>I took this picture at Shiraito Falls (白糸の滝), Fujinomiya, Japan.</figcaption>
+      </figure>
+      <p class="self-introduction">Because of my interest in games, I love developing some small games with my friends during my spare time. It’s 
+          such a great fun playing the games developed by my own. This spring, I developed a board game called carcassonne
+          with my friends.</p>
+      <figure>
+        <img id="carcassonne" src="/images/carcassonne.png"/>
+        <figcaption>This is the game Carcassonne that my friends and I developed using Java this spring.</figcaption>
+      </figure>
+      <h2 id="fact">Click to learn a random fact about me!</h2>
+      <button onclick="addRandomFact()"><span>Fact about myself</span></button>
       <div id="fact-container">
           <p>Want to learn more about me? Click the button above!</p>
+      </div>
+      <h2>A list of projects I've worked on</h2>
+      <ul id="projects">
+          <li><a href="https://drive.google.com/file/d/1NvSbDFMHeKHZi6drf3yWCKX6SiY52kfl/view?usp=sharing">Research on Clonorchis sinensis,
+          a parasite in Southeast Asia</a></li>
+          <li><a href="https://www.youtube.com/watch?v=tJYLIBygazQ">Mario Kart Kinect</a></li>
+          <li>Board Game Carcassonne</li>
+          <li>EirBand</li>
+      </ul>
+      <h2 id="gallery">My Photo Gallery</h2>
+      <p>Click to see <a href="gallery.html">my photo gallery</a>!</p>
+      <h2 id="contact">Contact</h2>
+      <div id="contact-bar">
+        <a href="https://www.linkedin.com/in/yiwen-zhang-a8b34a154/"><img src="images/linkedin.jpg" alt="The LinkedIn icon"/></a>
+        <a href="https://github.com/LeonardZ0731"><img src="images/github.png" alt="The Github icon"/></a>
+        <a href="https://www.instagram.com/leonardthegreat_23/"><img src="images/insta.jpg" alt="The Instagram icon"/></a>
       </div>
     </div>
   </body>

@@ -1,0 +1,102 @@
+div {
+    margin-top: 10px;
+    background-color: rgba(135, 207, 235, 0.644);
+    padding: 10px;
+}
+
+#content {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1000px;
+  width: auto;
+  background-color: rgba(190, 227, 241, 0.836)
+}
+
+body {
+    background-image: url("/images/background.jpg");
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-attachment: fixed;
+}
+
+.image-thumbnails {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.image-thumbnails img {
+  margin: 10px;
+  max-height: 600px;
+  height: auto;
+  max-width: 600px;
+  width: auto;
+}
+
+#return-link {
+    margin: 10px 10px;
+    background-color: rgba(255, 255, 255, 0.856);
+    padding: 10px;
+    max-width: 90%;
+    position: fixed;
+}
+
+#image-container {
+    background-color:rgba(255, 255, 255, 0);
+}
+
+button:hover span:after {
+    visibility: visible; 
+    right: 0px;
+}
+
+.landscape {
+    display: none;
+    vertical-align: middle;
+    -webkit-animation-name: fade;
+    -webkit-animation-duration: 1.5s;
+    animation-name: fade;
+    animation-duration: 1.5s;
+}
+
+@-webkit-keyframes fade {
+    from {opacity: .4}
+    to {opacity: 1}
+}
+ 
+@keyframes fade {
+    from {opacity: .4}
+    to {opacity: 1}
+}
+
+#image-container {
+    background-color: rgba(255, 255, 255, 0.7);
+    position: relative;
+    margin: auto;
+}
+
+#prev, #next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    padding: 10px;
+    margin-top: -20px;
+    color: rgb(3, 3, 3);
+    user-select: none;
+    font-size: 20px;
+    font-weight: bold;
+    transition: 0.5s;
+}
+
+#prev {
+    left: 0px;
+}
+
+#next {
+    right: 0px;
+}
+
+#prev:hover, #next:hover {
+    background-color: rgba(230, 73, 73, 0.808);
+}

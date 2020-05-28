@@ -33,5 +33,9 @@ function addRandomFact() {
 
   // Add it to the page.
   const factContainer = document.getElementById('fact-container');
-  factContainer.innerText = fact;
+  var para = document.createElement("p");
+  var node = document.createTextNode(fact);
+  para.appendChild(node);
+  factContainer.innerHTML = '';
+  factContainer.appendChild(para);
 }
