@@ -11,23 +11,39 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+var index = 1;
 /**
- * Generates a random number i from 1 to 16. Then create the URL that points to
- * the ith landscape image in the images folder and add the image element to the
- * container of the gallery page.
+ * Collect all images in the gallery.html of class "landscape" and make the ith photo visible
+ * The function has a precondition that the input i must be an integer between 1 and 16.
  */
-function changeImage() {
-    // Generate a random integer from 1 to 16
-    const index = Math.floor(Math.random() * 16) + 1;
-    // Create the URL that points to the certain landscape image in the images folder
-    const imageUrl = "images/landscape-" + index + ".jpg";
+function showImg(i) {
+    if (i < 1 || i > 16 || (!Number.isInteger(i))) {
+        throw "Input is illegal!";
+    }
+    var images = document.getElementsByClassName("landscape");
+    for (var j = 0; j < images.length; j++) {
+        if (i === (j + 1)) {
+            images[j].style.display = "block";
+        } else {
+            images[j].style.display =  "none";
+        }
+    }
+    var initial = document.getElementById("initial");
+    initial.style.display = "none";
+}
 
-    const newImgElement = document.createElement("img");
-    newImgElement.src = imageUrl;
-    newImgElement.onclick = "changeImage()";
-    
-    const imgContainer = document.getElementById("image-container");
-    imgContainer.innerHTML = "";
-    imgContainer.appendChild(newImgElement);
+function nextImg() {
+    index += 1;
+    if (index > 16) {
+        index = 1;
+    }
+    showImg(index);
+}
+
+function prevImg() {
+    index -= 1;
+    if (index === 0) {
+        index = 16;
+    }
+    showImg(index);
 }
