@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Leonard Zhang's Photo Gallery</title>
     <link rel="stylesheet" href="gallery_style.css">
+    <script src="change_picture_script.js"></script>
   </head>
   <body>
     <p id="return-link"><a href="index.html"><< Go back to the main portfolio page</a></p>
@@ -19,6 +20,13 @@
       <div class="image-thumbnails">
         <a href="images/Impulse Gundam.jpg"><img src="images/Impulse Gundam.jpg"/></a>
         <a href="images/Nu Gundam.jpg"><img src="images/Nu Gundam.jpg"/></a>
+      </div>
+      <h2 id="hiking">When I go travelling with my family members, I love taking pictures of the amazing landscapes and scenarios.</h2>
+      <div id="button-container">
+        <button onclick="changeImage()" style="vertical-align:middle"><span>Click to see more photos!</span></button>
+      </div>
+      <div class="image-thumbnails" id="image-container">
+        <img src="images/landscape-1.jpg" onclick="changeImage()"/>
       </div>
     </div>
   </body>
