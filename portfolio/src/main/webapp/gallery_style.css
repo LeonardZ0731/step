@@ -82,7 +82,7 @@ button:hover span:after {
     width: auto;
     padding: 10px;
     margin-top: -20px;
-    color: white;
+    color: rgb(3, 3, 3);
     user-select: none;
     font-size: 20px;
     font-weight: bold;
@@ -98,5 +98,5 @@ button:hover span:after {
 }
 
 #prev:hover, #next:hover {
-    background-color: rgba(0, 0, 0, 0.897);
+    background-color: rgba(230, 73, 73, 0.808);
 }
