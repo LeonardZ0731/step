@@ -43,6 +43,16 @@ function addRandomFact() {
 async function getMessageFromFetch() {
     console.log("Try fetch");
     const response = await fetch("/data");
-    const text = await response.text();
-    document.getElementById("message-container").innerText = text;
+    const messages = await response.json();
+    const messageContainer = document.getElementById("message-container")
+    messageContainer.innerHTML = "";
+    var index;
+    for (index = 0; index < messages.length; index++) {
+        var message = messages[index];
+        console.log(message);
+        var para = document.createElement("p");
+        var node = document.createTextNode(message);
+        para.appendChild(node);
+        messageContainer.appendChild(para);
+    }
 }
