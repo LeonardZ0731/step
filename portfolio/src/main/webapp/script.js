@@ -39,3 +39,10 @@ function addRandomFact() {
   factContainer.innerHTML = '';
   factContainer.appendChild(para);
 }
+
+async function getMessageFromFetch() {
+    console.log("Try fetch");
+    const response = await fetch("/data");
+    const text = await response.text();
+    document.getElementById("message-container").innerText = text;
+}
