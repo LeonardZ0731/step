@@ -40,19 +40,19 @@ function addRandomFact() {
   factContainer.appendChild(para);
 }
 
-async function getMessageFromFetch() {
+async function getCommentFromFetch() {
     console.log("Try fetch");
     const response = await fetch("/data");
-    const messages = await response.json();
-    const messageContainer = document.getElementById("message-container")
-    messageContainer.innerHTML = "";
+    const comments = await response.json();
+    const commentContainer = document.getElementById("comment-container")
+    commentContainer.innerHTML = "";
     var index;
-    for (index = 0; index < messages.length; index++) {
-        var message = messages[index];
-        console.log(message);
+    for (index = 0; index < comments.length; index++) {
+        var comment = comments[index];
+        console.log(comment);
         var para = document.createElement("p");
-        var node = document.createTextNode(message);
+        var node = document.createTextNode(comment);
         para.appendChild(node);
-        messageContainer.appendChild(para);
+        commentContainer.appendChild(para);
     }
 }

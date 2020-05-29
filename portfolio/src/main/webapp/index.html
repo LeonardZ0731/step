@@ -6,13 +6,14 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
-  <body>
+  <body onload="getCommentFromFetch()">
     <ul id="nav-bar">
         <li><a href="#intro-paragraph">Intro</a></li>
         <li><a href="#fact">Fact About Me</a></li>
         <li><a href="#projects">My Projects</a></li>
         <li><a href="#gallery">My Photo Gallery</a></li>
         <li><a href="#contact">Contact</a></li>
+        <li><a href="#comments">Comments</a></li>
     </ul>
     <div id="content">
       <h1 id="header">Leonard Zhang's Portfolio</h1>
@@ -55,9 +56,19 @@
         <a href="https://github.com/LeonardZ0731"><img src="images/github.png" alt="The Github icon"/></a>
         <a href="https://www.instagram.com/leonardthegreat_23/"><img src="images/insta.jpg" alt="The Instagram icon"/></a>
       </div>
+      <!-- Play around with Java Servlets and try to let the client user enter their name -->
+      <h2 id="comments">Leave your comments</h2>
+      <form action="/data" method="POST">
+        <p>Feel free to leave your comments here:</p>
+        <textarea name="comment-input">Your Comments</textarea>
+        <br/><br/>
+        <input type="submit" />
+        <br/>
+
+        <p>Visitors' comments</p>
+        <div id="comment-container"></div>
+        <br/>
+      </form>
     </div>
-    <!-- Play around with Java Servlets and try to let the client user enter their name -->
-    <button onclick="getMessageFromFetch()"><span>Play around with Java Servlets</span></button>
-    <div id="message-container"></div>
   </body>
 </html>
