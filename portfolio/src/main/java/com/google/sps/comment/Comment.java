@@ -17,11 +17,11 @@ package com.google.sps.comment;
 public final class Comment {
     private final String comment;
     private final long id;
-    private final long time;
+    private final long timestamp;
 
-    public Comment(long id, String comment, long time) {
+    public Comment(long id, String comment, long timestamp) {
         this.id = id;
         this.comment = comment;
-        this.time = time;
+        this.timestamp = timestamp;
     }
 }

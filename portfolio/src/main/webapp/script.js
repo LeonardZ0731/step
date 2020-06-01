@@ -45,13 +45,15 @@ async function getCommentFromFetch() {
     const response = await fetch("/data");
     const comments = await response.json();
     const commentContainer = document.getElementById("comment-container");
+    const maxComments = parseInt(document.getElementById("comment-limit").value, 10);
+    console.log(maxComments);
     commentContainer.innerHTML = "";
-    comments.forEach((commentEntry) => {
-        var commentString = commentEntry.comment;
+    for (var index = 0; index < maxComments; index++) {
+        var commentString = comments[index].comment;
         console.log(commentString);
         var para = document.createElement("p");
         var node = document.createTextNode(commentString);
         para.appendChild(node);
         commentContainer.appendChild(para);
-    });
+    };
 }
