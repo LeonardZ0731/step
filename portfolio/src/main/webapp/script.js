@@ -46,9 +46,7 @@ async function getCommentFromFetch() {
     const comments = await response.json();
     const commentContainer = document.getElementById("comment-container")
     commentContainer.innerHTML = "";
-    var index;
-    for (index = 0; index < comments.length; index++) {
-        var comment = comments[index];
+    for (const comment of comments) {
         console.log(comment);
         var para = document.createElement("p");
         var node = document.createTextNode(comment);
