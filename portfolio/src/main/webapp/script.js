@@ -44,13 +44,14 @@ async function getCommentFromFetch() {
     console.log("Try fetch");
     const response = await fetch("/data");
     const comments = await response.json();
-    const commentContainer = document.getElementById("comment-container")
+    const commentContainer = document.getElementById("comment-container");
     commentContainer.innerHTML = "";
-    for (const comment of comments) {
-        console.log(comment);
+    comments.forEach((commentEntry) => {
+        var commentString = commentEntry.comment;
+        console.log(commentString);
         var para = document.createElement("p");
-        var node = document.createTextNode(comment);
+        var node = document.createTextNode(commentString);
         para.appendChild(node);
         commentContainer.appendChild(para);
-    }
+    });
 }
