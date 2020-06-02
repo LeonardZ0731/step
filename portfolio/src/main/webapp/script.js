@@ -45,10 +45,16 @@ async function getCommentFromFetch() {
     const response = await fetch("/data");
     const comments = await response.json();
     const commentContainer = document.getElementById("comment-container");
-    const maxComments = parseInt(document.getElementById("comment-limit").value, 10);
+    var maxComments = parseInt(document.getElementById("comment-limit").value, 10);
+    if (Number.isNaN(maxComments)) {
+        console.log("You are trying to input a non-numeric data, please try again");
+        // Set the limit to default value
+        maxComments = 10;
+    }
     console.log(maxComments);
     commentContainer.innerHTML = "";
-    for (var index = 0; index < maxComments; index++) {
+    for (var index = 0; index < comments.length; index++) {
+        if (index === maxComments) break;
         var commentString = comments[index].comment;
         console.log(commentString);
         var para = document.createElement("p");
