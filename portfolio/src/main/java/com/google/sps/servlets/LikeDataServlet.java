@@ -26,12 +26,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that deletes all comments. */
-@WebServlet("/delete-data")
-public class DeleteDataServlet extends HttpServlet {
+/** Servlet that likes a single comment. */
+@WebServlet("/like-data")
+public class LikeDataServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        System.out.println("Receive request");
+        String commentString = request.getParameter("comment");
+        System.out.println("Receive like: " + commentString);
+
         Query query = new Query("Comment");
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -39,13 +41,17 @@ public class DeleteDataServlet extends HttpServlet {
 
         // Loop through all entities and delete them using the key
         for (Entity entity: results.asIterable()) {
-            Key key = entity.getKey();
-            datastore.delete(key);
+            String comment = (String)entity.getProperty("comment");
+            if (comment.equals(commentString)) {
+                long likes = (long)entity.getProperty("like");
+                System.out.println("Current comment is: " + (String)entity.getProperty("comment"));
+                System.out.println("Current likes is: " + likes);
+                entity.setProperty("like", likes + 1);
+                System.out.println("Now likes become: " + (long)entity.getProperty("like"));
+                datastore.put(entity);
+            }
         }
-        response.setContentType("text/html;");
-        response.getWriter().println("");
 
-        // Redirect back to the HTML page.
         response.sendRedirect("/index.html");
     }
 }

@@ -51,7 +51,12 @@ function fetchHelper(maxComments, comments) {
         var para = document.createElement("p");
         var node = document.createTextNode(commentString);
         para.appendChild(node);
+        var button = document.createElement("button");
+        button.innerHTML = "Like";
+        const input = commentString.slice();
+        button.addEventListener("click", function () { likeComments(input) });
         commentContainer.appendChild(para);
+        commentContainer.appendChild(button);
     };
 }
 async function getCommentFromFetch() {
@@ -72,6 +77,7 @@ async function getCommentFromFetch() {
 
 async function onChangeFromFetch() {
     console.log("Try fetch");
+    document.getElementById("comment.")
     const response = await fetch("/data");
     const comments = await response.json();
     const dummyElement = comments.pop();
@@ -91,8 +97,15 @@ async function onChangeFromFetch() {
 
 async function deleteComments() {
     console.log("Delete all comments in datastore");
-    const request = new Request("/delete-data", {method: "POST"});
+    const request = new Request("/delete-data?trial=leonard", {method: "POST"});
     const response = await fetch(request);
     const commentContainer = document.getElementById("comment-container");
     commentContainer.innerHTML = "";
+}
+
+async function likeComments(commentString) {
+    console.log("Like a certain comment");
+    const queryURL = "/like-data?comment=" + commentString;
+    const request = new Request(queryURL, {method: "POST"});
+    const response = await fetch(request);
 }
