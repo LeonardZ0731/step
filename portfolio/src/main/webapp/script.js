@@ -97,7 +97,7 @@ async function onChangeFromFetch() {
 
 async function deleteComments() {
     console.log("Delete all comments in datastore");
-    const request = new Request("/delete-data?trial=leonard", {method: "POST"});
+    const request = new Request("/delete-data", {method: "POST"});
     const response = await fetch(request);
     const commentContainer = document.getElementById("comment-container");
     commentContainer.innerHTML = "";
