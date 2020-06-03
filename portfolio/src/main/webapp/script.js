@@ -40,6 +40,20 @@ function addRandomFact() {
   factContainer.appendChild(para);
 }
 
+function fetchHelper(maxComments, comments) {
+    const commentContainer = document.getElementById("comment-container");
+    console.log(maxComments);
+    commentContainer.innerHTML = "";
+    for (var index = 0; index < comments.length; index++) {
+        if (index === maxComments) break;
+        var commentString = comments[index].comment;
+        console.log(commentString);
+        var para = document.createElement("p");
+        var node = document.createTextNode(commentString);
+        para.appendChild(node);
+        commentContainer.appendChild(para);
+    };
+}
 async function getCommentFromFetch() {
     console.log("Try fetch");
     const response = await fetch("/data");
@@ -53,19 +67,7 @@ async function getCommentFromFetch() {
     }
     const commentLimitContainer = document.getElementById("comment-limit");
     commentLimitContainer.value = (maxComments.toString());
-    const commentContainer = document.getElementById("comment-container");
-    //var maxComments = parseInt(document.getElementById("comment-limit").value, 10);
-    console.log(maxComments);
-    commentContainer.innerHTML = "";
-    for (var index = 0; index < comments.length; index++) {
-        if (index === maxComments) break;
-        var commentString = comments[index].comment;
-        console.log(commentString);
-        var para = document.createElement("p");
-        var node = document.createTextNode(commentString);
-        para.appendChild(node);
-        commentContainer.appendChild(para);
-    };
+    fetchHelper(maxComments, comments);
 }
 
 async function onChangeFromFetch() {
@@ -73,22 +75,16 @@ async function onChangeFromFetch() {
     const response = await fetch("/data");
     const comments = await response.json();
     const dummyElement = comments.pop();
-    const commentContainer = document.getElementById("comment-container");
     var maxComments = parseInt(document.getElementById("comment-limit").value, 10);
     if (Number.isNaN(maxComments)) {
         console.log("You are trying to input a non-numeric data, please try again");
         // Set the limit to default value
         maxComments = 10;
     }
-    console.log(maxComments);
-    commentContainer.innerHTML = "";
-    for (var index = 0; index < comments.length; index++) {
-        if (index === maxComments) break;
-        var commentString = comments[index].comment;
-        console.log(commentString);
-        var para = document.createElement("p");
-        var node = document.createTextNode(commentString);
-        para.appendChild(node);
-        commentContainer.appendChild(para);
-    };
+    if (maxComments < 1) {
+        console.log("Please input a positive integer");
+        // Set the limit to default value
+        maxComments = 10;
+    }
+    fetchHelper(maxComments, comments);
 }
