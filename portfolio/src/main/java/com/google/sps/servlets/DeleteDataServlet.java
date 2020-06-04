@@ -27,10 +27,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Servlet that deletes all comments. */
-@WebServlet("/delete-data")
+@WebServlet("/comment-management")
 public class DeleteDataServlet extends HttpServlet {
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
         System.out.println("Receive request");
         Query query = new Query("Comment");
 
@@ -41,9 +41,7 @@ public class DeleteDataServlet extends HttpServlet {
         for (Entity entity: results.asIterable()) {
             Key key = entity.getKey();
             datastore.delete(key);
-        }
-        response.setContentType("text/html;");
-        response.getWriter().println("");
+        }        
 
         // Redirect back to the HTML page.
         response.sendRedirect("/index.html");

@@ -19,7 +19,9 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.appengine.api.datastore.Query.FilterOperator;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,29 +29,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Servlet that likes a single comment. */
-@WebServlet("/like-data")
+@WebServlet("/likes-management")
 public class LikeDataServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String commentString = request.getParameter("comment");
         System.out.println("Receive like: " + commentString);
 
-        Query query = new Query("Comment");
+        Filter commentFilter = new FilterPredicate("comment", FilterOperator.EQUAL, commentString);
+        Query query = new Query("Comment").setFilter(commentFilter);
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery results = datastore.prepare(query);
 
         // Loop through all entities and delete them using the key
         for (Entity entity: results.asIterable()) {
-            String comment = (String)entity.getProperty("comment");
-            if (comment.equals(commentString)) {
-                long likes = (long)entity.getProperty("like");
-                System.out.println("Current comment is: " + (String)entity.getProperty("comment"));
-                System.out.println("Current likes is: " + likes);
-                entity.setProperty("like", likes + 1);
-                System.out.println("Now likes become: " + (long)entity.getProperty("like"));
-                datastore.put(entity);
-            }
+            long likes = (long)entity.getProperty("like");
+            System.out.println("Current comment is: " + (String)entity.getProperty("comment"));
+            System.out.println("Current likes is: " + likes);
+            entity.setProperty("like", likes + 1);
+            System.out.println("Now likes become: " + (long)entity.getProperty("like"));
+            datastore.put(entity);
         }
 
         response.sendRedirect("/index.html");

@@ -22,6 +22,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
 import com.google.sps.comment.Comment;
+import com.google.sps.comment.CommentResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
@@ -45,11 +46,7 @@ public class DataServlet extends HttpServlet {
       PreparedQuery results = datastore.prepare(query);
 
       List<Comment> comments = new ArrayList<>();
-    //   int outputCount = 0;
       for (Entity entity: results.asIterable()) {
-        //   if (outputCount == this.maxComments) {
-        //       break;
-        //   }
           long id = entity.getKey().getId();
           String comment = (String) entity.getProperty("comment");
           long timestamp = (long) entity.getProperty("timestamp");
@@ -58,12 +55,11 @@ public class DataServlet extends HttpServlet {
 
           Comment commentEntry = new Comment(id, comment, timestamp);
           comments.add(commentEntry);
-        //   outputCount++;
       }
-      comments.add(new Comment(0, "", maxComments));
+      CommentResponse commentResponse = new CommentResponse(comments, maxComments);
 
       Gson gson = new Gson();
-      String json = gson.toJson(comments);
+      String json = gson.toJson(commentResponse);
 
       // Send out json as response
       response.setContentType("application/json;");
@@ -73,7 +69,7 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
       // Get the input from the form
-      int maxComment = getUserInput(request);
+      int maxComment = getMaxComments(request);
       if (maxComment == -1) {
           response.setContentType("text/html");
           response.getWriter().println("Please enter a valid positive integer");
@@ -105,26 +101,26 @@ public class DataServlet extends HttpServlet {
   }
 
   /** Returns the input entered by the user, or -1 if the input was invalid. */
-  private int getUserInput(HttpServletRequest request) {
+  private int getMaxComments(HttpServletRequest request) {
     // Get the input from the form.
-    String userInputString = request.getParameter("maximum-comments");
+    String maxCommentsString = request.getParameter("maximum-comments");
 
     // Convert the input to an int.
-    int userInput;
+    int maxComments;
     try {
-      userInput = Integer.parseInt(userInputString);
+      maxComments = Integer.parseInt(maxCommentsString);
     } catch (NumberFormatException e) {
-      System.err.println("Could not convert to int: " + userInputString);
+      System.err.println("Could not convert to int: " + maxCommentsString);
       return -1;
     }
 
     // Check that the input is positive.
-    if (userInput < 1) {
-      System.err.println("User input is out of range: " + userInputString);
+    if (maxComments < 1) {
+      System.err.println("User input is out of range: " + maxCommentsString);
       return -1;
     }
 
-    System.out.println(userInput);
-    return userInput;
+    System.out.println(maxComments);
+    return maxComments;
   }
 }

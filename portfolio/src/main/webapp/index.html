@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
-  <body onload="getCommentFromFetch()">
+  <body onload="fetchCommentsWithStoredLimit()">
     <ul id="nav-bar">
         <li><a href="#intro-paragraph">Intro</a></li>
         <li><a href="#fact">Fact About Me</a></li>
@@ -69,7 +69,7 @@
         <div id="comment-container"></div>
         <br/>
         <label for="comment-limit">Input the maximum number of comments shown:</label>
-        <input type="number" id="comment-limit" name="maximum-comments" min="1" value="10" onchange="onChangeFromFetch()">
+        <input type="number" id="comment-limit" name="maximum-comments" min="1" value="10" onchange="fetchCommentsWithInputLimit()">
         <br/><br/>
         <button id="delete-all" onclick="deleteComments()"><span>CAUTION: DELETE ALL COMMENTS!</span></button>
       </form>
