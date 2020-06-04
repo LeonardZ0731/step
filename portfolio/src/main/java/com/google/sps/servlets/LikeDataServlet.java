@@ -22,6 +22,9 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -29,28 +32,30 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Servlet that likes a single comment. */
-@WebServlet("/likes-management")
+@WebServlet("/comments/like")
 public class LikeDataServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String commentString = request.getParameter("comment");
-        System.out.println("Receive like: " + commentString);
+        String keyString = request.getParameter("key");
+        System.out.println("Receive like: " + keyString);
 
-        Filter commentFilter = new FilterPredicate("comment", FilterOperator.EQUAL, commentString);
-        Query query = new Query("Comment").setFilter(commentFilter);
+        Key commentKey = KeyFactory.stringToKey(keyString);
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        PreparedQuery results = datastore.prepare(query);
-
-        // Loop through all entities and delete them using the key
-        for (Entity entity: results.asIterable()) {
-            long likes = (long)entity.getProperty("like");
-            System.out.println("Current comment is: " + (String)entity.getProperty("comment"));
-            System.out.println("Current likes is: " + likes);
-            entity.setProperty("like", likes + 1);
-            System.out.println("Now likes become: " + (long)entity.getProperty("like"));
-            datastore.put(entity);
+        Entity comment;
+        try {
+            comment = datastore.get(commentKey);
+        } catch (EntityNotFoundException e) {
+            System.err.println("Unable to find the entity based on the input key");
+            return;
         }
+
+        long likes = (long)comment.getProperty("like");
+        System.out.println("Current comment is: " + (String)comment.getProperty("comment"));
+        System.out.println("Current likes is: " + likes);
+        comment.setProperty("like", likes + 1);
+        System.out.println("Now likes become: " + (long)comment.getProperty("like"));
+        datastore.put(comment);
 
         response.sendRedirect("/index.html");
     }

@@ -20,6 +20,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.gson.Gson;
 import com.google.sps.comment.Comment;
 import com.google.sps.comment.CommentResponse;
@@ -47,13 +48,13 @@ public class DataServlet extends HttpServlet {
 
       List<Comment> comments = new ArrayList<>();
       for (Entity entity: results.asIterable()) {
-          long id = entity.getKey().getId();
+          String keyString = KeyFactory.keyToString(entity.getKey());
           String comment = (String) entity.getProperty("comment");
           long timestamp = (long) entity.getProperty("timestamp");
           System.out.println(comment);
           System.out.println((long) entity.getProperty("like"));
 
-          Comment commentEntry = new Comment(id, comment, timestamp);
+          Comment commentEntry = new Comment(keyString, comment, timestamp);
           comments.add(commentEntry);
       }
       CommentResponse commentResponse = new CommentResponse(comments, maxComments);

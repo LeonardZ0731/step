@@ -98,7 +98,7 @@ async function fetchCommentsWithInputLimit() {
 
 async function deleteComments() {
     console.log("Delete all comments in datastore");
-    const request = new Request("/comment-management", {method: "DELETE"});
+    const request = new Request("/comments", {method: "DELETE"});
     const response = await fetch(request);
     const commentContainer = document.getElementById("comment-container");
     commentContainer.innerHTML = "";
@@ -106,7 +106,16 @@ async function deleteComments() {
 
 async function likeComments(commentString) {
     console.log("Like a certain comment");
-    const queryURL = "/likes-management?comment=" + commentString;
+    const response = await fetch("/data");
+    const commentResponse = await response.json();
+    const comments = commentResponse.commentList;
+    var key;
+    for (var index = 0; index < comments.length; index++) {
+        if (commentString === comments[index].comment) {
+            key = comments[index].keyString
+        }
+    }
+    const queryURL = "/comments/like?key=" + key;
     const request = new Request(queryURL, {method: "POST"});
-    const response = await fetch(request);
+    const newResponse = await fetch(request);
 }

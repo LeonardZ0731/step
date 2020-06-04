@@ -17,10 +17,10 @@ package com.google.sps.comment;
 import java.util.List;
 
 public final class CommentResponse {
-    private final List commentList;
+    private final List<Comment> commentList;
     private final int maxComments;
 
-    public CommentResponse(List commentList, int maxComments) {
+    public CommentResponse(List<Comment> commentList, int maxComments) {
         this.commentList = commentList;
         this.maxComments = maxComments;
     }
