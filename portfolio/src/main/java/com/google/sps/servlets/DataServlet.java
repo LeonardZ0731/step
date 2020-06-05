@@ -20,6 +20,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.gson.Gson;
 import com.google.sps.comment.Comment;
@@ -33,7 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Servlet that returns some example content. */
-@WebServlet("/data")
+@WebServlet("/comments")
 public class DataServlet extends HttpServlet {
   
   private static int maxComments = 10;
@@ -123,5 +124,23 @@ public class DataServlet extends HttpServlet {
 
     System.out.println(maxComments);
     return maxComments;
+  }
+
+  @Override
+  public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    System.out.println("Receive request");
+    Query query = new Query("Comment");
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
+
+    // Loop through all entities and delete them using the key
+    for (Entity entity: results.asIterable()) {
+      Key key = entity.getKey();
+      datastore.delete(key);
+    }        
+
+    // Redirect back to the HTML page.
+    response.sendRedirect("/index.html");
   }
 }

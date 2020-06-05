@@ -47,14 +47,15 @@ function displayComments(maxComments, comments) {
     for (var index = 0; index < comments.length; index++) {
         if (index === maxComments) break;
         var commentString = comments[index].comment;
-        console.log(commentString);
+        var keyString = comments[index].keyString;
+        console.log(keyString);
         var para = document.createElement("p");
         var node = document.createTextNode(commentString);
         para.appendChild(node);
         var button = document.createElement("button");
         button.innerHTML = "Like";
         button.type = "button";
-        const input = commentString.slice();
+        const input = keyString.slice();
         button.addEventListener("click", function () { likeComments(input) });
         commentContainer.appendChild(para);
         commentContainer.appendChild(button);
@@ -63,7 +64,7 @@ function displayComments(maxComments, comments) {
 
 async function fetchCommentsWithStoredLimit() {
     console.log("Try fetch");
-    const response = await fetch("/data");
+    const response = await fetch("/comments");
     const commentResponse = await response.json();
     const comments = commentResponse.commentList;
     var maxComments = parseInt(commentResponse.maxComments, 10);
@@ -79,7 +80,7 @@ async function fetchCommentsWithStoredLimit() {
 
 async function fetchCommentsWithInputLimit() {
     console.log("Try fetch");
-    const response = await fetch("/data");
+    const response = await fetch("/comments");
     const commentResponse = await response.json();
     const comments = commentResponse.commentList;
     var maxComments = parseInt(document.getElementById("comment-limit").value, 10);
@@ -104,18 +105,9 @@ async function deleteComments() {
     commentContainer.innerHTML = "";
 }
 
-async function likeComments(commentString) {
+async function likeComments(keyString) {
     console.log("Like a certain comment");
-    const response = await fetch("/data");
-    const commentResponse = await response.json();
-    const comments = commentResponse.commentList;
-    var key;
-    for (var index = 0; index < comments.length; index++) {
-        if (commentString === comments[index].comment) {
-            key = comments[index].keyString
-        }
-    }
-    const queryURL = "/comments/like?key=" + key;
+    const queryURL = "/comments/like?key=" + keyString;
     const request = new Request(queryURL, {method: "POST"});
     const newResponse = await fetch(request);
 }

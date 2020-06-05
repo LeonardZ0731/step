@@ -47,6 +47,7 @@ public class LikeDataServlet extends HttpServlet {
             comment = datastore.get(commentKey);
         } catch (EntityNotFoundException e) {
             System.err.println("Unable to find the entity based on the input key");
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "The entity is not found in the database");
             return;
         }
 
