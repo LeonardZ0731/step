@@ -20,8 +20,11 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.gson.Gson;
 import com.google.sps.comment.Comment;
+import com.google.sps.comment.CommentResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
@@ -31,28 +34,34 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Servlet that returns some example content. */
-@WebServlet("/data")
+@WebServlet("/comments")
 public class DataServlet extends HttpServlet {
+  
+  private static int maxComments = 10;
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-      Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
+      Query query = new Query("Comment").addSort("like", SortDirection.DESCENDING)
+                                        .addSort("timestamp", SortDirection.DESCENDING);
 
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       PreparedQuery results = datastore.prepare(query);
 
       List<Comment> comments = new ArrayList<>();
       for (Entity entity: results.asIterable()) {
-          long id = entity.getKey().getId();
+          String keyString = KeyFactory.keyToString(entity.getKey());
           String comment = (String) entity.getProperty("comment");
           long timestamp = (long) entity.getProperty("timestamp");
+          System.out.println(comment);
+          System.out.println((long) entity.getProperty("like"));
 
-          Comment commentEntry = new Comment(id, comment, timestamp);
+          Comment commentEntry = new Comment(keyString, comment, timestamp);
           comments.add(commentEntry);
       }
+      CommentResponse commentResponse = new CommentResponse(comments, maxComments);
 
       Gson gson = new Gson();
-      String json = gson.toJson(comments);
+      String json = gson.toJson(commentResponse);
 
       // Send out json as response
       response.setContentType("application/json;");
@@ -62,6 +71,15 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
       // Get the input from the form
+      int maxComment = getMaxComments(request);
+      if (maxComment == -1) {
+          response.setContentType("text/html");
+          response.getWriter().println("Please enter a valid positive integer");
+          return;
+      }
+      this.maxComments = maxComment;
+      System.out.println(this.maxComments);
+
       String inputText = "";
       String inputValue = request.getParameter("comment-input");
       if (inputValue != null) {
@@ -74,6 +92,7 @@ public class DataServlet extends HttpServlet {
           Entity commentEntity = new Entity("Comment");
           commentEntity.setProperty("comment", inputText);
           commentEntity.setProperty("timestamp", timestamp);
+          commentEntity.setProperty("like", 1);
 
           DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
           datastore.put(commentEntity);
@@ -81,5 +100,59 @@ public class DataServlet extends HttpServlet {
 
       // Redirect back to the HTML page.
       response.sendRedirect("/index.html");
+  }
+
+  /** Returns the input entered by the user, or -1 if the input was invalid. */
+  private int getMaxComments(HttpServletRequest request) {
+    // Get the input from the form.
+    String maxCommentsString = request.getParameter("maximum-comments");
+
+    // Convert the input to an int.
+    int maxComments;
+    try {
+      maxComments = Integer.parseInt(maxCommentsString);
+    } catch (NumberFormatException e) {
+      System.err.println("Could not convert to int: " + maxCommentsString);
+      return -1;
+    }
+
+    // Check that the input is positive.
+    if (maxComments < 1) {
+      System.err.println("User input is out of range: " + maxCommentsString);
+      return -1;
+    }
+
+    System.out.println(maxComments);
+    return maxComments;
+  }
+
+  @Override
+  public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    System.out.println("Receive request");
+    Query query = new Query("Comment");
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
+
+    // Loop through all entities and delete them using the key
+    for (Entity entity: results.asIterable()) {
+      Key key = entity.getKey();
+      datastore.delete(key);
+    }        
+
+    // Redirect back to the HTML page.
+    response.sendRedirect("/index.html");
+  }
+
+  @Override
+  public void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+      System.out.println("Receive PUT request");
+      int maxComment = getMaxComments(request);
+      if (maxComment == -1) {
+          response.setContentType("text/html");
+          response.getWriter().println("Please enter a valid positive integer");
+          return;
+      }
+      this.maxComments = maxComment;
   }
 }

@@ -40,26 +40,67 @@ function addRandomFact() {
   factContainer.appendChild(para);
 }
 
-async function getCommentFromFetch() {
-    console.log("Try fetch");
-    const response = await fetch("/data");
-    const comments = await response.json();
+function displayComments(maxComments, comments) {
     const commentContainer = document.getElementById("comment-container");
-    var maxComments = parseInt(document.getElementById("comment-limit").value, 10);
-    if (Number.isNaN(maxComments)) {
-        console.log("You are trying to input a non-numeric data, please try again");
-        // Set the limit to default value
-        maxComments = 10;
-    }
     console.log(maxComments);
     commentContainer.innerHTML = "";
     for (var index = 0; index < comments.length; index++) {
         if (index === maxComments) break;
         var commentString = comments[index].comment;
-        console.log(commentString);
+        var keyString = comments[index].keyString;
+        console.log(keyString);
         var para = document.createElement("p");
         var node = document.createTextNode(commentString);
         para.appendChild(node);
+        var button = document.createElement("button");
+        button.innerHTML = "Like";
+        button.type = "button";
+        const input = keyString.slice();
+        button.addEventListener("click", function () { likeComments(input) });
         commentContainer.appendChild(para);
+        commentContainer.appendChild(button);
     };
+}
+
+async function fetchCommentsWithStoredLimit() {
+    console.log("Try fetch");
+    const response = await fetch("/comments");
+    const commentResponse = await response.json();
+    const comments = commentResponse.commentList;
+    var maxComments = parseInt(commentResponse.maxComments, 10);
+    if (Number.isNaN(maxComments)) {
+        console.log("You are trying to input a non-numeric data, please try again");
+        // Set the limit to default value
+        maxComments = 10;
+    }
+    const commentLimitContainer = document.getElementById("comment-limit");
+    commentLimitContainer.value = (maxComments.toString());
+    displayComments(maxComments, comments);
+}
+
+async function fetchCommentsWithInputLimit() {
+    var inputLimit = document.getElementById("comment-limit").value;
+    if (Number.isNaN(parseInt(inputLimit, 10))) {
+        console.log("You are trying to input a non-numeric data, please try again");
+        inputLimit = "10";
+    }
+    const queryURL = "/comments?maximum-comments=" + inputLimit;
+    const request = new Request(queryURL, {method: "PUT"});
+    const response = await fetch(request);
+    fetchCommentsWithStoredLimit();
+}
+
+async function deleteComments() {
+    console.log("Delete all comments in datastore");
+    const request = new Request("/comments", {method: "DELETE"});
+    const response = await fetch(request);
+    const commentContainer = document.getElementById("comment-container");
+    commentContainer.innerHTML = "";
+}
+
+async function likeComments(keyString) {
+    console.log("Like a certain comment");
+    const queryURL = "/comments/like?key=" + keyString;
+    const request = new Request(queryURL, {method: "POST"});
+    const newResponse = await fetch(request);
 }

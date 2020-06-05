@@ -94,6 +94,11 @@ button:hover span:after {
     right: 0px;
 }
 
+#delete-all {
+    background-color: yellow;
+    color: black;
+}
+
 div {
     margin-top: 10px;
     border: 2px solid black;

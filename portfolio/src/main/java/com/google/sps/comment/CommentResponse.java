@@ -14,14 +14,14 @@
 
 package com.google.sps.comment;
 
-public final class Comment {
-    private final String comment;
-    private final String keyString;
-    private final long timestamp;
+import java.util.List;
 
-    public Comment(String keyString, String comment, long timestamp) {
-        this.keyString = keyString;
-        this.comment = comment;
-        this.timestamp = timestamp;
+public final class CommentResponse {
+    private final List<Comment> commentList;
+    private final int maxComments;
+
+    public CommentResponse(List<Comment> commentList, int maxComments) {
+        this.commentList = commentList;
+        this.maxComments = maxComments;
     }
 }
