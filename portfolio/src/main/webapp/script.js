@@ -79,22 +79,15 @@ async function fetchCommentsWithStoredLimit() {
 }
 
 async function fetchCommentsWithInputLimit() {
-    console.log("Try fetch");
-    const response = await fetch("/comments");
-    const commentResponse = await response.json();
-    const comments = commentResponse.commentList;
-    var maxComments = parseInt(document.getElementById("comment-limit").value, 10);
-    if (Number.isNaN(maxComments)) {
+    var inputLimit = document.getElementById("comment-limit").value;
+    if (Number.isNaN(parseInt(inputLimit, 10))) {
         console.log("You are trying to input a non-numeric data, please try again");
-        // Set the limit to default value
-        maxComments = 10;
+        inputLimit = "10";
     }
-    if (maxComments < 1) {
-        console.log("Please input a positive integer");
-        // Set the limit to default value
-        maxComments = 10;
-    }
-    displayComments(maxComments, comments);
+    const queryURL = "/comments?maximum-comments=" + inputLimit;
+    const request = new Request(queryURL, {method: "PUT"});
+    const response = await fetch(request);
+    fetchCommentsWithStoredLimit();
 }
 
 async function deleteComments() {

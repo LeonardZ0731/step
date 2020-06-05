@@ -143,4 +143,16 @@ public class DataServlet extends HttpServlet {
     // Redirect back to the HTML page.
     response.sendRedirect("/index.html");
   }
+
+  @Override
+  public void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+      System.out.println("Receive PUT request");
+      int maxComment = getMaxComments(request);
+      if (maxComment == -1) {
+          response.setContentType("text/html");
+          response.getWriter().println("Please enter a valid positive integer");
+          return;
+      }
+      this.maxComments = maxComment;
+  }
 }
