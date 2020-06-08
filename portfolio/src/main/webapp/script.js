@@ -15,6 +15,9 @@
 /**
  * Adds a random greeting to the page.
  */
+var markers = [];
+var map;
+
 function addRandomFact() {
   const fact_1 = 'I grew up in China and my hometown is Shanghai.';
   const fact_2 = 'I am also studying for a Computation and Applied Math Major.'
@@ -110,7 +113,7 @@ async function likeComments(keyString) {
  * Initialize a map on the page
  */
 function initMap() {
-    const map = new google.maps.Map(document.getElementById("map"), {
+    map = new google.maps.Map(document.getElementById("map"), {
         center: {lat: 40.44230, lng: -79.9427},
         zoom: 18,
         styles: [
@@ -250,6 +253,21 @@ function initMap() {
         mapTypeId: "satellite"
     });
     map.setTilt(45);
+
+    // When the map is double clicked, call function addMarker()
+    map.addListener("dblclick", function(event) {
+        addMarker(event.latLng);
+    });
+
+    addMarker({lat: 40.4382538, lng: -79.9201019});
+    addMarker({lat: 40.4376751, lng: -79.9190924});
+}
+
+function addMarker(position) {
+    markers.push(new google.maps.Marker({
+        position: position,
+        map: map
+    }));
 }
 
 async function initialize() {
