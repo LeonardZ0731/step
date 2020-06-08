@@ -112,7 +112,7 @@ async function likeComments(keyString) {
 /**
  * Initialize a map on the page
  */
-function initMap() {
+async function initMap() {
     map = new google.maps.Map(document.getElementById("map"), {
         center: {lat: 40.44230, lng: -79.9427},
         zoom: 18,
@@ -259,15 +259,33 @@ function initMap() {
         addMarker(event.latLng);
     });
 
-    addMarker({lat: 40.4382538, lng: -79.9201019});
-    addMarker({lat: 40.4376751, lng: -79.9190924});
+    const response = await fetch("/markers");
+    const markers = await response.json();
+
+    for (var index = 0; index < markers.length; index++) {
+        var latLng = markers[index];
+        var lat = parseFloat(latLng.latitude);
+        var lng = parseFloat(latLng.longitude);
+        displayMarker({lat: lat, lng: lng});
+    }
+
+    displayMarker({lat: 40.4382538, lng: -79.9201019});
+    displayMarker({lat: 40.4376751, lng: -79.9190924});
 }
 
-function addMarker(position) {
+function displayMarker(position) {
     markers.push(new google.maps.Marker({
         position: position,
         map: map
     }));
+}
+
+async function addMarker(position) {
+    var lat = position.lat();
+    var lng = position.lng();
+    const queryURL = "/markers?latitude=" + lat.toString() + "&longitude=" + lng.toString();
+    const request = new Request(queryURL, {method: "POST"});
+    const response = await fetch(request);
 }
 
 async function initialize() {
