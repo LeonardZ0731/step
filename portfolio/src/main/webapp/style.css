@@ -99,7 +99,7 @@ button:hover span:after {
     color: black;
 }
 
-div {
+.non-map {
     margin-top: 10px;
     border: 2px solid black;
     background-color: white;
@@ -179,4 +179,17 @@ textarea {
 
 textarea:focus {
     width: 100%;
+}
+
+.like-button {
+    background-color: green;
+    color: white;
+    max-width: 150px;
+    max-height: 150px;
+}
+
+#map {
+  border: thin solid black;
+  height: 500px;
+  width: 500px;
 }
