@@ -107,6 +107,7 @@ async function likeComments(keyString) {
     const queryURL = "/comments/like?key=" + keyString;
     const request = new Request(queryURL, {method: "POST"});
     const newResponse = await fetch(request);
+    fetchCommentsWithInputLimit();
 }
 
 /**
@@ -255,7 +256,7 @@ async function initMap() {
     map.setTilt(45);
 
     // When the map is double clicked, call function addMarker()
-    map.addListener("dblclick", function(event) {
+    map.addListener("click", function(event) {
         addMarker(event.latLng);
     });
 
@@ -286,6 +287,7 @@ async function addMarker(position) {
     const queryURL = "/markers?latitude=" + lat.toString() + "&longitude=" + lng.toString();
     const request = new Request(queryURL, {method: "POST"});
     const response = await fetch(request);
+    initMap();
 }
 
 async function initialize() {
