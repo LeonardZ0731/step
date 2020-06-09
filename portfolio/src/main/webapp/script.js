@@ -260,18 +260,7 @@ async function initMap() {
         addMarker(event.latLng);
     });
 
-    displayMarker(40.4382538, -79.9201019);
-    displayMarker(40.4376751, -79.9190924);
-
-    const response = await fetch("/markers");
-    const responseMarkers = await response.json();
-
-    for (var index = 0; index < responseMarkers.length; index++) {
-        var latLng = responseMarkers[index];
-        var lat = parseFloat(latLng.latitude);
-        var lng = parseFloat(latLng.longitude);
-        displayMarker(lat, lng);
-    }
+    displayMarkers();
 
     var input = document.getElementById("place-input");
     var searchBox = new google.maps.places.SearchBox(input);
@@ -304,6 +293,22 @@ async function initMap() {
     });
 }
 
+async function displayMarkers() {
+    markers = [];
+    displayMarker(40.4382538, -79.9201019);
+    displayMarker(40.4376751, -79.9190924);
+
+    const response = await fetch("/markers");
+    const responseMarkers = await response.json();
+
+    for (var index = 0; index < responseMarkers.length; index++) {
+        var latLng = responseMarkers[index];
+        var lat = parseFloat(latLng.latitude);
+        var lng = parseFloat(latLng.longitude);
+        displayMarker(lat, lng);
+    }
+}
+
 function displayMarker(lat, lng) {
     marker = new google.maps.Marker({
         position: {lat: lat, lng: lng},
@@ -323,7 +328,7 @@ async function addMarker(position) {
     const queryURL = "/markers?latitude=" + lat.toString() + "&longitude=" + lng.toString();
     const request = new Request(queryURL, {method: "POST"});
     const response = await fetch(request);
-    initMap();
+    displayMarkers();
 }
 
 async function initialize() {
