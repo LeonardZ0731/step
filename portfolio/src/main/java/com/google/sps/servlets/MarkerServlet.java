@@ -19,6 +19,12 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.CompositeFilter;
+import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.appengine.api.datastore.Key;
 import com.google.gson.Gson;
 import com.google.sps.marker.Marker;
 import java.io.IOException;
@@ -69,5 +75,37 @@ public class MarkerServlet extends HttpServlet {
 
       // Redirect back to the HTML page.
       response.sendRedirect("/index.html");
+    }
+
+    @Override
+    public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+      String latitudeString = request.getParameter("latitude");
+      String longitudeString = request.getParameter("longitude");
+      double latitude = Double.parseDouble(latitudeString);
+      double longitude = Double.parseDouble(longitudeString);
+      System.out.println("Remove lag: " + latitude + ", lng: " + longitude);
+
+      Filter latitudeFilter =
+        new FilterPredicate("latitude", FilterOperator.EQUAL, latitude);
+
+      Filter longitudeFilter = 
+        new FilterPredicate("longitude", FilterOperator.EQUAL, longitude);
+
+      CompositeFilter latLngFilter = CompositeFilterOperator.and(latitudeFilter, longitudeFilter);
+
+      Query query = new Query("Marker").setFilter(latLngFilter);
+
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      PreparedQuery results = datastore.prepare(query);
+      
+      // Loop through all entities and delete them using the key
+      for (Entity entity: results.asIterable()) {
+        System.out.println("DELETE");
+        Key key = entity.getKey();
+        datastore.delete(key);
+      }
+
+      // Redirect back to the HTML page.
+      response.sendRedirect("/index.html"); 
     }
 }

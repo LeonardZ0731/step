@@ -114,6 +114,7 @@ async function likeComments(keyString) {
  * Initialize a map on the page
  */
 async function initMap() {
+    markers = [];
     map = new google.maps.Map(document.getElementById("map"), {
         center: {lat: 40.44230, lng: -79.9427},
         zoom: 18,
@@ -260,25 +261,31 @@ async function initMap() {
         addMarker(event.latLng);
     });
 
-    const response = await fetch("/markers");
-    const markers = await response.json();
+    displayMarker(40.4382538, -79.9201019, 0);
+    displayMarker(40.4376751, -79.9190924, 1);
 
-    for (var index = 0; index < markers.length; index++) {
-        var latLng = markers[index];
+    const response = await fetch("/markers");
+    const responseMarkers = await response.json();
+
+    for (var index = 0; index < responseMarkers.length; index++) {
+        var latLng = responseMarkers[index];
         var lat = parseFloat(latLng.latitude);
         var lng = parseFloat(latLng.longitude);
-        displayMarker({lat: lat, lng: lng});
+        displayMarker(lat, lng, index + 2);
     }
-
-    displayMarker({lat: 40.4382538, lng: -79.9201019});
-    displayMarker({lat: 40.4376751, lng: -79.9190924});
 }
 
-function displayMarker(position) {
-    markers.push(new google.maps.Marker({
-        position: position,
+function displayMarker(lat, lng, index) {
+    marker = new google.maps.Marker({
+        position: {lat: lat, lng: lng},
         map: map
-    }));
+    });
+
+    google.maps.event.addListener(marker, "click", function(event) {
+        deleteMarker(lat, lng, index);
+    })
+    
+    markers.push(marker);
 }
 
 async function addMarker(position) {
@@ -293,4 +300,14 @@ async function addMarker(position) {
 async function initialize() {
     initMap();
     fetchCommentsWithStoredLimit();
+}
+
+async function deleteMarker(latitude, longitude, index) {
+    console.log("Delete the last marker");
+    const removedMarker = markers[index];
+    markers.splice(index, 1);
+    removedMarker.setMap(null);
+    const queryURL = "/markers?latitude=" + latitude.toString() + "&longitude=" + longitude.toString();
+    const request = new Request(queryURL, {method: "DELETE"});
+    const response = await fetch(request);
 }
