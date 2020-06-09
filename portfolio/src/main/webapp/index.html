@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>My Portfolio</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE&libraries=places"></script>
     <script src="script.js"></script>
   </head>
   <body onload="initialize()">
@@ -76,6 +76,7 @@
       </form>
       <br/>
       <h2 id="rest-map">Click to mark your favorite restaurant on the map!</h2>
+      <input id="place-input" class="controls" type="text" placeholder="Search Box">
       <div id="map"></div>
     </div>
   </body>
