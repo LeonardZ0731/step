@@ -252,7 +252,6 @@ async function initMap() {
                 "stylers": [{"color": "#92998d"}]
             }
         ],
-        mapTypeId: "satellite"
     });
     map.setTilt(45);
 
@@ -261,8 +260,8 @@ async function initMap() {
         addMarker(event.latLng);
     });
 
-    displayMarker(40.4382538, -79.9201019, 0);
-    displayMarker(40.4376751, -79.9190924, 1);
+    displayMarker(40.4382538, -79.9201019);
+    displayMarker(40.4376751, -79.9190924);
 
     const response = await fetch("/markers");
     const responseMarkers = await response.json();
@@ -271,18 +270,18 @@ async function initMap() {
         var latLng = responseMarkers[index];
         var lat = parseFloat(latLng.latitude);
         var lng = parseFloat(latLng.longitude);
-        displayMarker(lat, lng, index + 2);
+        displayMarker(lat, lng);
     }
 }
 
-function displayMarker(lat, lng, index) {
+function displayMarker(lat, lng) {
     marker = new google.maps.Marker({
         position: {lat: lat, lng: lng},
         map: map
     });
 
-    google.maps.event.addListener(marker, "click", function(event) {
-        deleteMarker(lat, lng, index);
+    google.maps.event.addListener(marker, "dblclick", function(event) {
+        deleteMarker(lat, lng);
     })
     
     markers.push(marker);
@@ -302,12 +301,22 @@ async function initialize() {
     fetchCommentsWithStoredLimit();
 }
 
-async function deleteMarker(latitude, longitude, index) {
-    console.log("Delete the last marker");
-    const removedMarker = markers[index];
-    markers.splice(index, 1);
-    removedMarker.setMap(null);
+async function deleteMarker(latitude, longitude) {
+    console.log("Delete the marker");
+    removeMarker(latitude, longitude);
     const queryURL = "/markers?latitude=" + latitude.toString() + "&longitude=" + longitude.toString();
     const request = new Request(queryURL, {method: "DELETE"});
     const response = await fetch(request);
+}
+
+function removeMarker(latitude, longitude) {
+    for (var i = 0; i < markers.length; i++) {
+        var marker = markers[i];
+        if (marker.getPosition().lat() === latitude
+         && marker.getPosition().lng() === longitude) {
+             markers.splice(i, 1);
+             marker.setMap(null);
+             break;
+         }
+    }
 }
