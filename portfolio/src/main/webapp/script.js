@@ -308,8 +308,7 @@ async function displayMarkers() {
     const responseMarkers = await response.json();
 
     for (var index = 0; index < responseMarkers.length; index++) {
-        var lat, lng;
-        [lat, lng] = [responseMarkers[index].latitude, responseMarkers[index].longitude];
+        var [lat, lng] = [responseMarkers[index].latitude, responseMarkers[index].longitude];
         displayMarker(lat, lng);
     }
 }
@@ -350,9 +349,13 @@ async function deleteMarker(latitude, longitude) {
 }
 
 function removeMarker(latitude, longitude) {
-    const markersCopy = [...markers];
-    markers = markers.filter(marker => marker.getPosition().lat() !== latitude 
-                          || marker.getPosition().lng() !== longitude);
-    let difference = markersCopy.filter(marker => !markers.includes(marker));
-    difference.forEach(marker => marker.setMap(null));
+    markers = markers.filter(function(marker) { 
+        if (marker.getPosition().lat() !== latitude 
+         || marker.getPosition().lng() !== longitude) {
+             return true;
+        } else {
+            marker.setMap(null);
+            return false;
+        }
+    });
 }
