@@ -59,7 +59,9 @@
       </div>
       <!-- Play around with Java Servlets and try to let the client user enter their name -->
       <h2 id="comments">Leave your comments</h2>
-      <form action="/comments" method="POST">
+      <p id="comments-login">To see and publish comments, please login <a href="/login">here</a></p>
+      <p id="comments-logout">You can log out of your account <a href="/login">here</a></p>
+      <form id="comments-form" action="/comments" method="POST">
         <p>Feel free to leave your comments here:</p>
         <textarea name="comment-input" placeholder="Your Comments"></textarea>
         <br/><br/>

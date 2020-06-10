@@ -335,8 +335,27 @@ async function addMarker(position) {
     displayMarkers();
 }
 
+async function checkStatus() {
+    const response = await fetch('/login/status');
+    const status = await response.text();
+    if (status.trim().localeCompare("true") === 0) {
+        document.getElementById("comments-login").style.display="none";
+        document.getElementById("comments-logout").style.display="block";
+        document.getElementById("comments-form").style.display="block";
+        console.log("Enter the true if branch");
+        console.log(status.localeCompare("true"));
+    } else {
+        document.getElementById("comments-login").style.display="block";
+        document.getElementById("comments-logout").style.display="none";
+        document.getElementById("comments-form").style.display="none";
+        console.log("Enter the false if branch");
+        console.log(status.localeCompare("true"));
+    }
+}
+
 async function initialize() {
     initMap();
+    checkStatus();
     fetchCommentsWithStoredLimit();
 }
 
