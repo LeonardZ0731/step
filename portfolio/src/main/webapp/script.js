@@ -17,6 +17,12 @@
  */
 var markers = [];
 var map;
+const CMU_LAT = 40.44230;
+const CMU_LNG = -79.9427;
+const EVERYDAY_NOODLE_LAT = 40.4382538;
+const EVERYDAY_NOODLE_LNG = -79.9201019;
+const TAIWAN_BISTRO_LAT = 40.4376751;
+const TAIWAN_BISTRO_LNG = -79.9190924;
 
 function addRandomFact() {
   const fact_1 = 'I grew up in China and my hometown is Shanghai.';
@@ -116,7 +122,7 @@ async function likeComments(keyString) {
 async function initMap() {
     markers = [];
     map = new google.maps.Map(document.getElementById("map"), {
-        center: {lat: 40.44230, lng: -79.9427},
+        center: {lat: CMU_LAT, lng: CMU_LNG},
         zoom: 18,
         styles: [
             {
@@ -295,22 +301,21 @@ async function initMap() {
 
 async function displayMarkers() {
     markers = [];
-    displayMarker(40.4382538, -79.9201019);
-    displayMarker(40.4376751, -79.9190924);
+    displayMarker(EVERYDAY_NOODLE_LAT, EVERYDAY_NOODLE_LNG);
+    displayMarker(TAIWAN_BISTRO_LAT, TAIWAN_BISTRO_LNG);
 
     const response = await fetch("/markers");
     const responseMarkers = await response.json();
 
     for (var index = 0; index < responseMarkers.length; index++) {
-        var latLng = responseMarkers[index];
-        var lat = parseFloat(latLng.latitude);
-        var lng = parseFloat(latLng.longitude);
+        var lat, lng;
+        [lat, lng] = [responseMarkers[index].latitude, responseMarkers[index].longitude];
         displayMarker(lat, lng);
     }
 }
 
 function displayMarker(lat, lng) {
-    marker = new google.maps.Marker({
+    let marker = new google.maps.Marker({
         position: {lat: lat, lng: lng},
         map: map
     });
@@ -345,13 +350,9 @@ async function deleteMarker(latitude, longitude) {
 }
 
 function removeMarker(latitude, longitude) {
-    for (var i = 0; i < markers.length; i++) {
-        var marker = markers[i];
-        if (marker.getPosition().lat() === latitude
-         && marker.getPosition().lng() === longitude) {
-             markers.splice(i, 1);
-             marker.setMap(null);
-             break;
-         }
-    }
+    const markersCopy = [...markers];
+    markers = markers.filter(marker => marker.getPosition().lat() !== latitude 
+                          || marker.getPosition().lng() !== longitude);
+    let difference = markersCopy.filter(marker => !markers.includes(marker));
+    difference.forEach(marker => marker.setMap(null));
 }

@@ -73,8 +73,7 @@ public class MarkerServlet extends HttpServlet {
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       datastore.put(markerEntity);
 
-      // Redirect back to the HTML page.
-      response.sendRedirect("/index.html");
+      response.setStatus(HttpServletResponse.SC_OK);
     }
 
     @Override
@@ -105,7 +104,6 @@ public class MarkerServlet extends HttpServlet {
         datastore.delete(key);
       }
 
-      // Redirect back to the HTML page.
-      response.sendRedirect("/index.html"); 
+      response.setStatus(HttpServletResponse.SC_OK);
     }
 }
