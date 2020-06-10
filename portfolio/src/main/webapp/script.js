@@ -55,11 +55,13 @@ function displayComments(maxComments, comments) {
     commentContainer.innerHTML = "";
     for (var index = 0; index < comments.length; index++) {
         if (index === maxComments) break;
-        var commentString = comments[index].comment;
-        var keyString = comments[index].keyString;
+        var comment = comments[index];
+        var commentString = comment.comment;
+        var keyString = comment.keyString;
+        var emailString = comment.email;
         console.log(keyString);
         var para = document.createElement("p");
-        var node = document.createTextNode(commentString);
+        var node = document.createTextNode(emailString + ": " + commentString);
         para.appendChild(node);
         var button = document.createElement("button");
         button.innerHTML = "Like";
@@ -342,21 +344,17 @@ async function checkStatus() {
         document.getElementById("comments-login").style.display="none";
         document.getElementById("comments-logout").style.display="block";
         document.getElementById("comments-form").style.display="block";
-        console.log("Enter the true if branch");
-        console.log(status.localeCompare("true"));
+        fetchCommentsWithStoredLimit();
     } else {
         document.getElementById("comments-login").style.display="block";
         document.getElementById("comments-logout").style.display="none";
         document.getElementById("comments-form").style.display="none";
-        console.log("Enter the false if branch");
-        console.log(status.localeCompare("true"));
     }
 }
 
 async function initialize() {
     initMap();
     checkStatus();
-    fetchCommentsWithStoredLimit();
 }
 
 async function deleteMarker(latitude, longitude) {

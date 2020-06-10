@@ -22,6 +22,8 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import com.google.sps.comment.Comment;
 import com.google.sps.comment.CommentResponse;
@@ -52,10 +54,11 @@ public class DataServlet extends HttpServlet {
           String keyString = KeyFactory.keyToString(entity.getKey());
           String comment = (String) entity.getProperty("comment");
           long timestamp = (long) entity.getProperty("timestamp");
+          String email = (String) entity.getProperty("email");
           System.out.println(comment);
           System.out.println((long) entity.getProperty("like"));
 
-          Comment commentEntry = new Comment(keyString, comment, timestamp);
+          Comment commentEntry = new Comment(keyString, comment, timestamp, email);
           comments.add(commentEntry);
       }
       CommentResponse commentResponse = new CommentResponse(comments, maxComments);
@@ -70,6 +73,13 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+      // Only logged-in users are able to submit the form and create a POST request.
+      UserService userService = UserServiceFactory.getUserService();
+      if (!userService.isUserLoggedIn()) {
+          System.err.println("POST request will not be handled if the user is not logged in");
+          response.sendError(HttpServletResponse.SC_FORBIDDEN, "You need to log into your account first");
+          return;
+      }
       // Get the input from the form
       int maxComment = getMaxComments(request);
       if (maxComment == -1) {
@@ -93,6 +103,7 @@ public class DataServlet extends HttpServlet {
           commentEntity.setProperty("comment", inputText);
           commentEntity.setProperty("timestamp", timestamp);
           commentEntity.setProperty("like", 1);
+          commentEntity.setProperty("email", userService.getCurrentUser().getEmail());
 
           DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
           datastore.put(commentEntity);
