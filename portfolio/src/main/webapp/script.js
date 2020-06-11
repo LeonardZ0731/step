@@ -340,7 +340,7 @@ async function addMarker(position) {
 async function checkStatus() {
     const response = await fetch('/login/status');
     const statusResponse = await response.json();
-    const status = statusRespone[0];
+    const status = statusResponse[0];
     if (status) {
         document.getElementById("comments-login").style.display = "none";
         document.getElementById("comments-logout").style.display = "block";
