@@ -29,6 +29,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import com.google.sps.comment.Comment;
 import com.google.sps.comment.CommentResponse;
+import com.google.sps.helper.RetrieveNickname;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class DataServlet extends HttpServlet {
 
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       PreparedQuery results = datastore.prepare(query);
+      UserService userService = UserServiceFactory.getUserService();
 
       List<Comment> comments = new ArrayList<>();
       for (Entity entity: results.asIterable()) {
@@ -55,7 +57,7 @@ public class DataServlet extends HttpServlet {
           String comment = (String) entity.getProperty("comment");
           long timestamp = (long) entity.getProperty("timestamp");
           String email = (String) entity.getProperty("email");
-          String nickname = AuthenticationServlet.getNickname(email);
+          String nickname = RetrieveNickname.getNickname(userService);
           if (nickname == null) {
               nickname = email;
           }
@@ -68,7 +70,7 @@ public class DataServlet extends HttpServlet {
 
       // The default value for maxComments is 10
       long maxComments = 10;
-      String userEmail = UserServiceFactory.getUserService().getCurrentUser().getEmail();
+      String userEmail = userService.getCurrentUser().getEmail();
       Query maxCommentQuery = new Query("MaxComment").setFilter(new FilterPredicate("email", FilterOperator.EQUAL, userEmail));
       results = datastore.prepare(maxCommentQuery);
       Entity entity = results.asSingleEntity();
