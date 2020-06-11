@@ -19,6 +19,8 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -37,17 +39,44 @@ public class AuthenticationServlet extends HttpServlet {
       PrintWriter out = response.getWriter();
 
       UserService userService = UserServiceFactory.getUserService();
-      if (userService.isUserLoggedIn()) {
-          String userEmail = userService.getCurrentUser().getEmail();
-          String urlToRedirctToAfterUserLogsOut = "/index.html";
-          String logoutUrl = userService.createLogoutURL(urlToRedirctToAfterUserLogsOut);
-          out.println("<p>Hello " + userEmail + "!</p>");
-          out.println("<p>Logout <a href=\"" + logoutUrl + "\">here</a>.</p>");
-      } else {
-          String urlToRedirectToAfterUserLogsIn = "/index.html";
+      // If the user has already logged, show the log out link
+      if (!userService.isUserLoggedIn()) {
+          String urlToRedirectToAfterUserLogsIn = "/login";
           String loginUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
           out.println("<p>Hello stranger.</p>");
           out.println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
+          return;
       }
+
+      String nickname = getNickname(userService.getCurrentUser().getEmail());
+      if (nickname == null) {
+          response.sendRedirect("/nickname.html");
+          return;
+      } 
+
+      String userEmail = userService.getCurrentUser().getEmail();
+      String urlToRedirctToAfterUserLogsOut = "/index.html";
+      String logoutUrl = userService.createLogoutURL(urlToRedirctToAfterUserLogsOut);
+      out.println("<p>Hello " + userEmail + "!</p>");
+      out.println("<p>Logout <a href=\"" + logoutUrl + "\">here</a>.</p>");
+      out.println("<p>If you want to change your nickname, click <a href=\"/nickname.html\">here</a>.</p>");
+    }
+
+    public static String getNickname(String email) {
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        Query query = new Query("UserInfo").setFilter(new FilterPredicate("email", FilterOperator.EQUAL, email));
+        PreparedQuery results = datastore.prepare(query);
+        
+        int count = 0;
+        String nickname = null;
+        for (Entity entity: results.asIterable()) {
+            count += 1;
+            if (entity == null) {
+                return null;
+            }
+            nickname = (String) entity.getProperty("nickname");
+        }
+        if (count == 0) return null;
+        return nickname;
     }
 }

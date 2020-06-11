@@ -18,12 +18,12 @@ public final class Comment {
     private final String comment;
     private final String keyString;
     private final long timestamp;
-    private final String email;
+    private final String nickname;
 
-    public Comment(String keyString, String comment, long timestamp, String email) {
+    public Comment(String keyString, String comment, long timestamp, String nickname) {
         this.keyString = keyString;
         this.comment = comment;
         this.timestamp = timestamp;
-        this.email = email;
+        this.nickname = nickname;
     }
 }

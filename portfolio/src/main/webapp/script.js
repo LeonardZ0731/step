@@ -58,10 +58,10 @@ function displayComments(maxComments, comments) {
         var comment = comments[index];
         var commentString = comment.comment;
         var keyString = comment.keyString;
-        var emailString = comment.email;
+        var nicknameString = comment.nickname;
         console.log(keyString);
         var para = document.createElement("p");
-        var node = document.createTextNode(emailString + ": " + commentString);
+        var node = document.createTextNode(nicknameString + ": " + commentString);
         para.appendChild(node);
         var button = document.createElement("button");
         button.innerHTML = "Like";
