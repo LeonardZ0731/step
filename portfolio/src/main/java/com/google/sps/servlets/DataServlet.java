@@ -22,6 +22,8 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
@@ -38,8 +40,6 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that returns some example content. */
 @WebServlet("/comments")
 public class DataServlet extends HttpServlet {
-  
-  private static int maxComments = 10;
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -64,6 +64,17 @@ public class DataServlet extends HttpServlet {
 
           Comment commentEntry = new Comment(keyString, comment, timestamp, nickname);
           comments.add(commentEntry);
+      }
+
+      // The default value for maxComments is 10
+      long maxComments = 10;
+      String userEmail = UserServiceFactory.getUserService().getCurrentUser().getEmail();
+      Query maxCommentQuery = new Query("MaxComment").setFilter(new FilterPredicate("email", FilterOperator.EQUAL, userEmail));
+      results = datastore.prepare(maxCommentQuery);
+      Entity entity = results.asSingleEntity();
+      // If the user has stored his preferred maxComments value before, replace the default value with stored value
+      if (entity != null) {
+          maxComments = (long) entity.getProperty("limit");
       }
       CommentResponse commentResponse = new CommentResponse(comments, maxComments);
 
@@ -91,8 +102,7 @@ public class DataServlet extends HttpServlet {
           response.getWriter().println("Please enter a valid positive integer");
           return;
       }
-      this.maxComments = maxComment;
-      System.out.println(this.maxComments);
+      storeMaxComments(maxComment);
 
       String inputText = "";
       String inputValue = request.getParameter("comment-input");
@@ -169,6 +179,27 @@ public class DataServlet extends HttpServlet {
           response.getWriter().println("Please enter a valid positive integer");
           return;
       }
-      this.maxComments = maxComment;
+      
+      storeMaxComments(maxComment);
+  }
+
+  private void storeMaxComments(int maxComments) {
+      // Store the maximum comments limit with the user
+      UserService userService = UserServiceFactory.getUserService();
+
+      String email = userService.getCurrentUser().getEmail();
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      Query query = new Query("MaxComment").setFilter(
+        new FilterPredicate("email", FilterOperator.EQUAL, email));
+      PreparedQuery results = datastore.prepare(query);
+      Entity entity = results.asSingleEntity();
+      if (entity == null) {
+        entity = new Entity("MaxComment");
+        entity.setProperty("limit", maxComments);
+        entity.setProperty("email", email);
+      } else {
+        entity.setProperty("limit", maxComments);
+      }
+      datastore.put(entity);
   }
 }

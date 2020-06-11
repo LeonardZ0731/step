@@ -18,9 +18,9 @@ import java.util.List;
 
 public final class CommentResponse {
     private final List<Comment> commentList;
-    private final int maxComments;
+    private final long maxComments;
 
-    public CommentResponse(List<Comment> commentList, int maxComments) {
+    public CommentResponse(List<Comment> commentList, long maxComments) {
         this.commentList = commentList;
         this.maxComments = maxComments;
     }
