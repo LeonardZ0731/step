@@ -19,6 +19,8 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.io.IOException;
@@ -42,9 +44,17 @@ public class NicknameServlet extends HttpServlet {
         String email = userService.getCurrentUser().getEmail();
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        Entity entity = new Entity("UserInfo");
-        entity.setProperty("nickname", nickname);
-        entity.setProperty("email", email);
+        Query query = new Query("UserInfo").setFilter(
+            new FilterPredicate("email", FilterOperator.EQUAL, email));
+        PreparedQuery results = datastore.prepare(query);
+        Entity entity = results.asSingleEntity();
+        if (entity == null) {
+            entity = new Entity("UserInfo");
+            entity.setProperty("nickname", nickname);
+            entity.setProperty("email", email);
+        } else {
+            entity.setProperty("nickname", nickname);
+        }
         datastore.put(entity);
 
         response.sendRedirect("/index.html");
