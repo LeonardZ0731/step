@@ -57,7 +57,7 @@ public class DataServlet extends HttpServlet {
           String comment = (String) entity.getProperty("comment");
           long timestamp = (long) entity.getProperty("timestamp");
           String email = (String) entity.getProperty("email");
-          String nickname = RetrieveNickname.getNickname(userService);
+          String nickname = RetrieveNickname.getNicknameFromEmail(email);
           if (nickname == null) {
               nickname = email;
           }

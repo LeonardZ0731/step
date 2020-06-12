@@ -25,10 +25,10 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
 public final class RetrieveNickname {
-    public static String getNickname(UserService userService) {
+    public static String getNicknameFromEmail(String email) {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         Query query = new Query("UserInfo").setFilter(
-            new FilterPredicate("email", FilterOperator.EQUAL, userService.getCurrentUser().getEmail()));
+            new FilterPredicate("email", FilterOperator.EQUAL, email));
         PreparedQuery results = datastore.prepare(query);
         
         Entity entity = results.asSingleEntity();
@@ -36,5 +36,8 @@ public final class RetrieveNickname {
             return null;
         }
         return (String) entity.getProperty("nickname");
+    }
+    public static String getNickname(UserService userService) {
+        return getNicknameFromEmail(userService.getCurrentUser().getEmail());
     }
 }

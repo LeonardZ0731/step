@@ -55,10 +55,9 @@ public class AuthenticationServlet extends HttpServlet {
           return;
       } 
 
-      String userEmail = userService.getCurrentUser().getEmail();
       String urlToRedirctToAfterUserLogsOut = "/index.html";
       String logoutUrl = userService.createLogoutURL(urlToRedirctToAfterUserLogsOut);
-      out.println("<p>Welcome back " + userEmail + "!</p>");
+      out.println("<p>Welcome back " + nickname + "!</p>");
       out.println("<p><a href=\"" + logoutUrl + "\">Logout here</a>.</p>");
       out.println("<p>If you want to change your nickname, <a href=\"/nickname.html\">click here</a>.</p>");
       out.println("<p><a href=\"/index.html\">Click here</a> to get back to main page.</p>");
