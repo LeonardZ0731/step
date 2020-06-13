@@ -12,16 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.comment;
+package com.google.sps.marker;
 
-import java.util.List;
+public final class Marker {
+    private final double latitude;
+    private final double longitude;
 
-public final class CommentResponse {
-    private final List<Comment> commentList;
-    private final long maxComments;
-
-    public CommentResponse(List<Comment> commentList, long maxComments) {
-        this.commentList = commentList;
-        this.maxComments = maxComments;
+    public Marker(double latitude, double longitude) {
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 }

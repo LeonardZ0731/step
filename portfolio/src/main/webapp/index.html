@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <title>My Portfolio</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE&libraries=places"></script>
     <script src="script.js"></script>
   </head>
-  <body onload="fetchCommentsWithStoredLimit()">
+  <body onload="initialize()">
     <ul id="nav-bar">
         <li><a href="#intro-paragraph">Intro</a></li>
         <li><a href="#fact">Fact About Me</a></li>
@@ -15,7 +16,7 @@
         <li><a href="#contact">Contact</a></li>
         <li><a href="#comments">Comments</a></li>
     </ul>
-    <div id="content">
+    <div class="non-map" id="content">
       <h1 id="header">Leonard Zhang's Portfolio</h1>
       <h2 id="intro-paragraph">Welcome to my portfolio page. Let' start a brief tour about me!</h2>
       <p class="self-introduction">Hi, I'm Leonard Zhang. You can call me Leonard. I’m a rising junior at Carnegie Mellon University, 
@@ -37,7 +38,7 @@
       </figure>
       <h2 id="fact">Click to learn a random fact about me!</h2>
       <button onclick="addRandomFact()"><span>Fact about myself</span></button>
-      <div id="fact-container">
+      <div class="non-map" id="fact-container">
           <p>Want to learn more about me? Click the button above!</p>
       </div>
       <h2>A list of projects I've worked on</h2>
@@ -51,14 +52,16 @@
       <h2 id="gallery">My Photo Gallery</h2>
       <p>Click to see <a href="gallery.html">my photo gallery</a>!</p>
       <h2 id="contact">Contact</h2>
-      <div id="contact-bar">
+      <div class="non-map" id="contact-bar">
         <a href="https://www.linkedin.com/in/yiwen-zhang-a8b34a154/"><img src="images/linkedin.jpg" alt="The LinkedIn icon"/></a>
         <a href="https://github.com/LeonardZ0731"><img src="images/github.png" alt="The Github icon"/></a>
         <a href="https://www.instagram.com/leonardthegreat_23/"><img src="images/insta.jpg" alt="The Instagram icon"/></a>
       </div>
       <!-- Play around with Java Servlets and try to let the client user enter their name -->
       <h2 id="comments">Leave your comments</h2>
-      <form action="/comments" method="POST">
+      <p id="comments-login">To see and publish comments, please <a href="/login">login here</a>.</p>
+      <p id="comments-logout">You can <a href="/login">log out here</a>.</p>
+      <form id="comments-form" action="/comments" method="POST">
         <p>Feel free to leave your comments here:</p>
         <textarea name="comment-input" placeholder="Your Comments"></textarea>
         <br/><br/>
@@ -66,13 +69,17 @@
         <br/>
 
         <p>Visitors' comments</p>
-        <div id="comment-container"></div>
+        <div class="non-map" id="comment-container"></div>
         <br/>
         <label for="comment-limit">Input the maximum number of comments shown:</label>
         <input type="number" id="comment-limit" name="maximum-comments" min="1" value="10" onchange="fetchCommentsWithInputLimit()">
         <br/><br/>
         <button id="delete-all" onclick="deleteComments()"><span>CAUTION: DELETE ALL COMMENTS!</span></button>
       </form>
+      <br/>
+      <h2 id="rest-map">Click to mark your favorite restaurant on the map!</h2>
+      <input id="place-input" class="controls" type="text" placeholder="Search Box">
+      <div id="map"></div>
     </div>
   </body>
 </html>
