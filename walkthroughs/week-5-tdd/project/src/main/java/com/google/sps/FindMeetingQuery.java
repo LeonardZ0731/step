@@ -24,6 +24,23 @@ import java.util.Arrays;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
+      Collection<String> attendees = request.getAttendees();
+      Collection<String> optional = request.getOptionalAttendees();
+      List<String> newAttendees = new ArrayList<>();
+      for (String attendee: attendees) newAttendees.add(attendee);
+      for (String attendee: optional) newAttendees.add(attendee);
+      MeetingRequest newRequest = new MeetingRequest(newAttendees, request.getDuration());
+      Collection<TimeRange> withOptional = queryWithMandatoryAttendee(events, newRequest);
+      Collection<TimeRange> withoutOptional = queryWithMandatoryAttendee(events, request);
+      if (attendees.isEmpty() && !optional.isEmpty()) {
+          return withOptional;
+      }
+      if (withOptional.isEmpty()) {
+          return withoutOptional;
+      }
+      return withOptional;
+  }
+  public Collection<TimeRange> queryWithMandatoryAttendee(Collection<Event> events, MeetingRequest request) {
       long duration = request.getDuration();
       if (duration > TimeRange.WHOLE_DAY.duration()) {
           return Arrays.asList();
@@ -44,6 +61,7 @@ public final class FindMeetingQuery {
       List<TimeRange> result = new ArrayList<>();
       for (TimeRange range: validEvents) {
           if (range.contains(initial)) {
+              initial = TimeRange.fromStartEnd(TimeRange.END_OF_DAY, TimeRange.END_OF_DAY, true);
               break;
           }
           if (range.end() <= initial.start()) {
