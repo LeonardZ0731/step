@@ -23,6 +23,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public final class FindMeetingQuery {
+  /**
+   * Returns a Collection of {@code TimeRange} based on {@code events} and {@code request}. If there
+   * exists available time slots for all the mandatory and optional attendees, return these time slots.
+   * If there are no such time slots, return all time slots that are available for all mandatory attendees
+   * to attend the meeting.
+   */
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
       Collection<String> attendees = request.getAttendees();
       Collection<String> optional = request.getOptionalAttendees();
@@ -40,26 +46,30 @@ public final class FindMeetingQuery {
       }
       return withOptional;
   }
+  /**
+   * Returns a Collection of {@code TimeRange} based on {@code events} and {@code request} such that
+   * the returned time slots are available for all the mandatory attendees indicated by {@code request}.
+   */
   public Collection<TimeRange> queryWithMandatoryAttendee(Collection<Event> events, MeetingRequest request) {
       long duration = request.getDuration();
+      // If the duration of request is longer than one day, there will be no available time slot for the
+      // request. Return empty list under such situation.
       if (duration > TimeRange.WHOLE_DAY.duration()) {
           return Arrays.asList();
       }
       Collection<String> attendees = request.getAttendees();
       Set<String> attendeeSet = new HashSet<>(attendees);
 
-      List<TimeRange> validEvents = new ArrayList<>();
+      List<TimeRange> matchingEvents = new ArrayList<>();
       for (Event event: events) {
-          Set<String> copy = new HashSet<>(attendees);
-          copy.retainAll(event.getAttendees());
-          if (copy.size() > 0) {
-              validEvents.add(event.getWhen());
+          if (!Collections.disjoint(attendees, event.getAttendees())) {
+              matchingEvents.add(event.getWhen());
           }
       }
-      Collections.sort(validEvents, TimeRange.ORDER_BY_START);
+      Collections.sort(matchingEvents, TimeRange.ORDER_BY_START);
       TimeRange initial = TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TimeRange.END_OF_DAY, true);
       List<TimeRange> result = new ArrayList<>();
-      for (TimeRange range: validEvents) {
+      for (TimeRange range: matchingEvents) {
           if (range.contains(initial)) {
               initial = TimeRange.fromStartEnd(TimeRange.END_OF_DAY, TimeRange.END_OF_DAY, true);
               break;
