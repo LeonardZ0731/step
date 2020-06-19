@@ -37,6 +37,7 @@ public final class ServerStatsServlet extends HttpServlet {
 
     // Convert the server stats to JSON
     ServerStats serverStats = new ServerStats(startTime, currentTime, maxMemory, usedMemory);
+    ServerStats serverStats2 = new ServerStats(startTime, curretn)
     String json = convertToJson(serverStats);
 
     // Send the JSON as the response
